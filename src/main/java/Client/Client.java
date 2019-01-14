@@ -1,3 +1,5 @@
+package Client;
+
 import java.io.*;
 import java.net.Socket;
 
@@ -12,8 +14,10 @@ public class Client {
             BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(socketClient.getOutputStream()));
             BufferedReader reader = new BufferedReader(new InputStreamReader(socketClient.getInputStream())))
         {
-            writer.write("Hello");
-            writer.flush();
+            System.out.println(reader.readLine());
+
+
+
         }catch (IOException e){
             e.getStackTrace();
         }
