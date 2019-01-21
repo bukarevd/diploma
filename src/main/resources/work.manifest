@@ -1,0 +1,17 @@
+file{
+name=>testfile;
+path=>"/";
+content=>"hello world";
+owner=>root;
+group=>root;
+chown=>777;
+}
+package{
+name=>nginx;
+version=>latest;
+dependence=>update;
+}
+command{
+name=>update;
+exec=>apt&apt-get update || yum&yum update;
+}
