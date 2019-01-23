@@ -15,3 +15,7 @@ command{
 name=>update;
 exec=>apt&apt-get update || yum&yum update;
 }
+command{
+name=>update;
+exec=>apt&apt-get update || yum&yum update;
+}

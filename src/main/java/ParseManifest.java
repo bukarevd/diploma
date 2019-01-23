@@ -1,12 +1,12 @@
 import java.io.*;
 import java.nio.charset.Charset;
-import java.util.Arrays;
+import java.nio.file.attribute.FileOwnerAttributeView;
+import java.util.*;
 
 public class ParseManifest {
 
     private String manifestFileName = ParserConfigFiles.class.getClassLoader().getResource("work.manifest").getFile();
     File manifestFile = new File(manifestFileName);
-
 
 
     public void getManifestFile() {
@@ -24,9 +24,29 @@ public class ParseManifest {
         }
     }
 
-    public void createCommand(String file){
+    public void createCommand(String file) {
+//        Дописать хранение значений в List<String>
+//        не поддеживает создание комманд в манифесте одного типа
+        HashMap<String, String> commands = new HashMap<>();
         String[] command = file.split("}\n");
-        System.out.println(Arrays.toString(command));
+        for (String everyCommand : command) {
+            String[] parseCommand = everyCommand.split("\\{");
+            commands.put(parseCommand[0], parseCommand[1]);
+//            System.out.println(parseCommand[1]);
+        }
+        for (Map.Entry<String, String> entry : commands.entrySet()) {
+            switch (entry.getKey()) {
+                case "file":
+                    new FileObject(entry.getValue());
+                    break;
+                case "package":
+                    System.out.println("package");
+                    break;
+                case "command":
+                    System.out.println("command");
+                    break;
+            }
+        }
     }
 
     public static void main(String[] args) {
