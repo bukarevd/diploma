@@ -1,4 +1,12 @@
-public class Client extends DimplomaApp {
+import java.io.IOException;
+import java.io.ObjectOutputStream;
+import java.io.OutputStream;
+import java.io.Serializable;
+import java.net.InetSocketAddress;
+import java.net.Socket;
+import java.util.List;
+
+public class Client extends DimplomaApp implements Serializable {
     private static final String CLIENTCONFIG = Client.class.getClassLoader().getResource("client.conf").getFile();
     private int clientPort;
     private String nameClient;
@@ -36,11 +44,25 @@ public class Client extends DimplomaApp {
         Client client = new Client();
         ParserConfigFiles parserClientFiles = new ParserConfigFiles(client);
         parserClientFiles.getConfig();
-        client.start();
+        System.out.println(client.getClientPort());
+        client.pushObject(client);
+        //client.start();
+    }
+
+    void pushObject(Client client){
+        try(Socket socket = new Socket()){
+            socket.connect(new InetSocketAddress("localhost", 8411));
+            OutputStream out = socket.getOutputStream();
+            ObjectOutputStream objectOutputStream = new ObjectOutputStream(out);
+            objectOutputStream.writeObject(client);
+            objectOutputStream.flush();
+        }catch (IOException e){
+            e.printStackTrace();
+        }
     }
 
     @Override
-    void start() {
+    void start(List<CommandObject> quiuiList) {
         System.out.println(getClientPort());
     }
 }

@@ -1,6 +1,5 @@
 import java.io.*;
 import java.nio.charset.Charset;
-import java.util.Arrays;
 import java.util.HashMap;
 
 class ParserConfigFiles {
@@ -29,6 +28,7 @@ class ParserConfigFiles {
 
     private void readClientFile(Client client){
         fileConfig = new File(client.getCLIENTCONFIG());
+        System.out.println(client.getCLIENTCONFIG());
         String configClientString = reader(fileConfig);
         setValue(client, configClientString);
 
@@ -55,7 +55,7 @@ class ParserConfigFiles {
             String[] tempString = str.split("=>");
             configClientValues.put(tempString[0], tempString[1]);
         }
-
+        System.out.println(configClientValues.get("port"));
         client.setClientPort(Integer.parseInt(configClientValues.get("port")));
         client.setNameClient(configClientValues.get("name"));
         client.setServer(configClientValues.get("server"));

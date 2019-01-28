@@ -1,23 +1,20 @@
-import java.io.Externalizable;
-import java.io.IOException;
-import java.io.ObjectInput;
-import java.io.ObjectOutput;
+import java.io.Serializable;
 import java.util.HashMap;
 
-public class FileObject extends CommandObject implements Externalizable {
+public class FileObject extends CommandObject implements Serializable {
     String name;
     String path;
     String content;
     String owner;
     String group;
-    int chown;
-
-    private static final long serialVersionUID = 0L;
-    private static final int VERSION = 0;
+    String dependence;
+    int chmod;
 
     public FileObject(String commandString) {
         parsingCommand(commandString);
     }
+
+    public FileObject(){}
 
     public String getName() {
         return name;
@@ -59,26 +56,22 @@ public class FileObject extends CommandObject implements Externalizable {
         this.group = group;
     }
 
-    public int getChown() {
-        return chown;
+    public String getDependence() {
+        return dependence;
     }
 
-    public void setChown(int chown) {
-        this.chown = chown;
+    public void setDependence(String dependence) {
+        this.dependence = dependence;
     }
 
-    @Override
-    public void writeExternal(ObjectOutput out) throws IOException {
-        out.writeInt(VERSION);
+    public int getChmod() {
+        return chmod;
     }
 
-    @Override
-    public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
-        int version = in.readInt();
-        if (version > VERSION) {
-            throw new IOException("unsupported version " + version);
-        }
+    public void setChmod(int chown) {
+        this.chmod = chown;
     }
+
 
     public void parsingCommand(String commandString){
         HashMap<String, String> commandHashMap = new HashMap<>();
@@ -90,12 +83,14 @@ public class FileObject extends CommandObject implements Externalizable {
         setValue(commandHashMap);
     }
 
+    @Override
     public void setValue(HashMap<String, String> ValuesHashMap){
        setName(ValuesHashMap.get("name"));
        setPath(ValuesHashMap.get("path"));
        setContent(ValuesHashMap.get("content"));
        setOwner(ValuesHashMap.get("owner"));
        setGroup(ValuesHashMap.get("group"));
-       setChown(Integer.parseInt(ValuesHashMap.get("chown")));
+       setDependence(ValuesHashMap.get("dependence"));
+       setChmod(Integer.parseInt(ValuesHashMap.get("chown")));
     }
 }
