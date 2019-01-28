@@ -14,7 +14,8 @@ public class FileObject extends CommandObject implements Serializable {
         parsingCommand(commandString);
     }
 
-    public FileObject(){}
+    public FileObject() {
+    }
 
     public String getName() {
         return name;
@@ -73,10 +74,10 @@ public class FileObject extends CommandObject implements Serializable {
     }
 
 
-    public void parsingCommand(String commandString){
+    public void parsingCommand(String commandString) {
         HashMap<String, String> commandHashMap = new HashMap<>();
         String[] tempString = commandString.split(";\n");
-        for (String str: tempString) {
+        for (String str : tempString) {
             String[] keyValue = str.split("=>");
             commandHashMap.put(keyValue[0], keyValue[1]);
         }
@@ -84,13 +85,13 @@ public class FileObject extends CommandObject implements Serializable {
     }
 
     @Override
-    public void setValue(HashMap<String, String> ValuesHashMap){
-       setName(ValuesHashMap.get("name"));
-       setPath(ValuesHashMap.get("path"));
-       setContent(ValuesHashMap.get("content"));
-       setOwner(ValuesHashMap.get("owner"));
-       setGroup(ValuesHashMap.get("group"));
-       setDependence(ValuesHashMap.get("dependence"));
-       setChmod(Integer.parseInt(ValuesHashMap.get("chown")));
+    public void setValue(HashMap<String, String> ValuesHashMap) {
+        setName(ValuesHashMap.get("name"));
+        setPath(ValuesHashMap.get("path"));
+        setContent(ValuesHashMap.get("content"));
+        setOwner(ValuesHashMap.get("owner"));
+        setGroup(ValuesHashMap.get("group"));
+        setDependence(ValuesHashMap.get("dependence"));
+        setChmod(Integer.parseInt(ValuesHashMap.get("chown")));
     }
 }

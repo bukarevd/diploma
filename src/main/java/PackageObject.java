@@ -22,10 +22,10 @@ public class PackageObject extends CommandObject implements Serializable {
         parsingCommand(commandString);
     }
 
-    public void parsingCommand(String commandString){
+    public void parsingCommand(String commandString) {
         HashMap<String, String> commandHashMap = new HashMap<>();
         String[] tempString = commandString.split(";\n");
-        for (String str: tempString) {
+        for (String str : tempString) {
             String[] keyValue = str.split("=>");
             commandHashMap.put(keyValue[0], keyValue[1]);
         }
@@ -33,7 +33,7 @@ public class PackageObject extends CommandObject implements Serializable {
     }
 
     @Override
-    public void setValue(HashMap<String, String> ValuesHashMap){
+    public void setValue(HashMap<String, String> ValuesHashMap) {
         setName(ValuesHashMap.get("name"));
         setVersion(ValuesHashMap.get("version"));
         setDependence(ValuesHashMap.get("dependence"));

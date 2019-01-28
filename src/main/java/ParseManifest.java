@@ -1,7 +1,9 @@
 import java.io.*;
 import java.nio.charset.Charset;
-import java.nio.file.attribute.FileOwnerAttributeView;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class ParseManifest {
     List<CommandObject> commandObjectList = new ArrayList<>();

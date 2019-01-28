@@ -9,6 +9,7 @@ import java.util.List;
 public class Client extends DimplomaApp implements Serializable {
     private static final String CLIENTCONFIG = Client.class.getClassLoader().getResource("client.conf").getFile();
     private int clientPort;
+    private int serverPort;
     private String nameClient;
     private String server;
 
@@ -22,6 +23,14 @@ public class Client extends DimplomaApp implements Serializable {
 
     public void setClientPort(int clientPort) {
         this.clientPort = clientPort;
+    }
+
+    public int getServerPort() {
+        return serverPort;
+    }
+
+    public void setServerPort(int serverPort) {
+        this.serverPort = serverPort;
     }
 
     public String getNameClient() {
@@ -44,25 +53,24 @@ public class Client extends DimplomaApp implements Serializable {
         Client client = new Client();
         ParserConfigFiles parserClientFiles = new ParserConfigFiles(client);
         parserClientFiles.getConfig();
-        System.out.println(client.getClientPort());
         client.pushObject(client);
         //client.start();
     }
 
-    void pushObject(Client client){
-        try(Socket socket = new Socket()){
-            socket.connect(new InetSocketAddress("localhost", 8411));
+    void pushObject(Client client) {
+        try (Socket socket = new Socket()) {
+            socket.connect(new InetSocketAddress(client.getServer(), client.getServerPort()));
             OutputStream out = socket.getOutputStream();
             ObjectOutputStream objectOutputStream = new ObjectOutputStream(out);
             objectOutputStream.writeObject(client);
             objectOutputStream.flush();
         }catch (IOException e){
-            e.printStackTrace();
+            System.out.println("Не удалось соединиться с сервером!!!");
+        }
+
+        }
+
+        @Override
+        void start (List < CommandObject > quiuiList) {
         }
     }
-
-    @Override
-    void start(List<CommandObject> quiuiList) {
-        System.out.println(getClientPort());
-    }
-}
