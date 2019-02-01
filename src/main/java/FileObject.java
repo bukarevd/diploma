@@ -1,7 +1,8 @@
 import java.io.Serializable;
+import java.util.Arrays;
 import java.util.HashMap;
 
-public class FileObject extends CommandObject implements Serializable {
+public class FileObject extends CommandsObject implements Serializable {
     String name;
     String path;
     String content;
@@ -81,7 +82,9 @@ public class FileObject extends CommandObject implements Serializable {
             String[] keyValue = str.split("=>");
             commandHashMap.put(keyValue[0], keyValue[1]);
         }
+        System.out.println(Arrays.toString(tempString));;
         setValue(commandHashMap);
+
     }
 
     @Override

@@ -1,17 +1,15 @@
 import java.io.*;
 import java.nio.charset.Charset;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class ParseManifest {
-    List<CommandObject> commandObjectList = new ArrayList<>();
+    List<CommandsObject> commandObjectList = new ArrayList<>();
     private String manifestFileName = ParserConfigFiles.class.getClassLoader().getResource("work.manifest").getFile();
     File manifestFile = new File(manifestFileName);
 
 
-    public List<CommandObject> getManifestFile() {
+    public List<CommandsObject> getManifestFile() {
+//        Чтение файла манифеста
         try (InputStream in = new FileInputStream(manifestFile);
              ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream()) {
             byte[] buf = new byte[1024];
@@ -27,28 +25,26 @@ public class ParseManifest {
     }
 
     public void createCommand(String file) {
-//        Дописать хранение значений в List<String>
-//        не поддеживает создание комманд в манифесте одного типа
+    //Парсин и добавление объекта команды в List
 
-        HashMap<String, String> commands = new HashMap<>();
         String[] command = file.split("}\n");
+        System.out.println(Arrays.toString(command));
         for (String everyCommand : command) {
-            String[] parseCommand = everyCommand.split("\\{");
-            commands.put(parseCommand[0], parseCommand[1]);
-        }
-        for (Map.Entry<String, String> entry : commands.entrySet()) {
-            switch (entry.getKey()) {
+            String[] parseCommand = everyCommand.split("\\{\n");
+            switch (parseCommand[0]) {
                 case "file":
-                    commandObjectList.add(new FileObject(entry.getValue()));
+                    commandObjectList.add(new FileObject(parseCommand[1]));
                     break;
                 case "package":
-                    commandObjectList.add(new PackageObject(entry.getValue()));
+                    commandObjectList.add(new PackageObject(parseCommand[1]));
                     break;
                 case "command":
-                    System.out.println("command");
+                    commandObjectList.add(new CommandObject(parseCommand[1]));
                     break;
             }
         }
+
+        System.out.println(commandObjectList);
     }
 }
 

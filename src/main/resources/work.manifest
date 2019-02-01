@@ -13,9 +13,9 @@ dependence=>update;
 }
 command{
 name=>update;
-exec=>apt&apt-get update || yum&yum update;
+exec=>apt-get update;
 }
 command{
-name=>update;
-exec=>apt&apt-get update || yum&yum update;
+name=>upgrade;
+exec=>apt-get upgrade;
 }

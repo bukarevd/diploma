@@ -1,7 +1,7 @@
 import java.io.Serializable;
 import java.util.HashMap;
 
-public class PackageObject extends CommandObject implements Serializable {
+public class PackageObject extends CommandsObject implements Serializable {
     String name;
     String version;
     String dependence;
