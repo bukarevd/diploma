@@ -1,3 +1,6 @@
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.Serializable;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -82,7 +85,7 @@ public class FileObject extends CommandsObject implements Serializable {
             String[] keyValue = str.split("=>");
             commandHashMap.put(keyValue[0], keyValue[1]);
         }
-        System.out.println(Arrays.toString(tempString));;
+        System.out.println(Arrays.toString(tempString));
         setValue(commandHashMap);
 
     }
@@ -96,5 +99,28 @@ public class FileObject extends CommandsObject implements Serializable {
         setGroup(ValuesHashMap.get("group"));
         setDependence(ValuesHashMap.get("dependence"));
         setChmod(Integer.parseInt(ValuesHashMap.get("chown")));
+    }
+
+    public void execute(){
+        StringBuilder sb = new StringBuilder();
+        String[] command = new String[]{"/bin/sh", "-c", "ld"};
+        try{
+            Process proc = new ProcessBuilder(command).start();
+            BufferedReader stdInput = new BufferedReader(new InputStreamReader(proc.getInputStream()));
+            BufferedReader stdError = new BufferedReader(new InputStreamReader(proc.getErrorStream()));
+            String s = null;
+            while ((s = stdInput.readLine()) != null){
+                sb.append(s);
+                sb.append("\n");
+            }
+
+            while ((s = stdError.readLine()) != null){
+                sb.append(s);
+                sb.append("\n");
+            }
+            System.out.println(sb.toString());;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

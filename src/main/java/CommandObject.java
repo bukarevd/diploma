@@ -6,7 +6,7 @@ public class CommandObject extends CommandsObject implements Serializable {
     String name;
     String exec;
 
-    public CommandObject(String commandString){
+    public CommandObject(String commandString) {
         parsingCommand(commandString);
     }
 

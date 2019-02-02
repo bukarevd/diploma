@@ -1,5 +1,6 @@
 import java.io.*;
 import java.net.*;
+import java.util.Enumeration;
 import java.util.List;
 import java.util.Objects;
 
@@ -58,10 +59,19 @@ public class Client extends DimplomaApp implements Serializable {
     public static void main(String[] args) {
         Client client = new Client();
         try {
-
-            System.out.println(Inet4Address.getLocalHost().);
-        } catch (UnknownHostException e) {
-            System.out.println("Не удается определить адрес хоста");
+            Enumeration<NetworkInterface> interfaces = NetworkInterface.getNetworkInterfaces();
+            while (interfaces.hasMoreElements()) {
+                NetworkInterface iface = interfaces.nextElement();
+                if (!iface.isUp() || !iface.isLoopback()) continue;
+                Enumeration<InetAddress> addresses = iface.getInetAddresses();
+                while (addresses.hasMoreElements()) {
+                    InetAddress addr = addresses.nextElement();
+                    if (addr instanceof Inet6Address) continue;
+                    client.setClientAddress(addr.getHostAddress());
+                }
+            }
+        } catch (SocketException e) {
+            e.printStackTrace();
         }
         System.out.println(client.getClientAddress());
         ParserConfigFiles parserClientFiles = new ParserConfigFiles(client);
@@ -76,24 +86,26 @@ public class Client extends DimplomaApp implements Serializable {
     }
 
     private void pushObject(Socket socket, Client client) throws IOException {
-
-            socket.connect(new InetSocketAddress(client.getServer(), client.getServerPort()));
-            OutputStream out = socket.getOutputStream();
-            ObjectOutputStream objectOutputStream = new ObjectOutputStream(out);
-            objectOutputStream.writeObject(client);
-            objectOutputStream.flush();
-
+// соединение с сервером
+        socket.connect(new InetSocketAddress(client.getServer(), client.getServerPort()));
+        OutputStream out = socket.getOutputStream();
+        ObjectOutputStream objectOutputStream = new ObjectOutputStream(out);
+        objectOutputStream.writeObject(client);
+        objectOutputStream.flush();
 
 
     }
 
-    private void getCommandObject(Socket socket){
+    private void getCommandObject(Socket socket) {
+//        получение объекста манифеста с сервера
         CommandsObject commandsObject = null;
         try {
             ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
             commandsObject = (CommandsObject) in.readObject();
-            if(commandsObject instanceof FileObject)
-                System.out.println((FileObject) commandsObject);
+            if (commandsObject instanceof FileObject) {
+                System.out.println(((FileObject) commandsObject).getName());
+                ((FileObject) commandsObject).execute();
+            }
         } catch (IOException e) {
             e.printStackTrace();
         } catch (ClassNotFoundException e) {

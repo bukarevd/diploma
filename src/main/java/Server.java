@@ -1,8 +1,6 @@
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.io.OutputStream;
-import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.List;
@@ -52,7 +50,8 @@ public class Server extends DimplomaApp {
         }
 
     }
-//  Получение объекта CLient
+
+    //  Получение объекта Client
     Client getMessage(Socket socket) {
         Client clientObject = null;
         try {
@@ -65,12 +64,13 @@ public class Server extends DimplomaApp {
         }
         return clientObject;
     }
-//    Отправка объектов на клиент для выполнения
+
+    //    Отправка объектов на клиент для выполнения
     void sendMessage(Socket socket, Client clientObject, List<CommandsObject> quiuiList) {
         try {
             ObjectOutputStream outServer = new ObjectOutputStream(socket.getOutputStream());
-           FileObject fo = new FileObject();
-           fo = (FileObject)quiuiList.get(0);
+            FileObject fo = new FileObject();
+            fo = (FileObject) quiuiList.get(0);
             System.out.println(fo.getName());
             outServer.writeObject(quiuiList.get(0));
             outServer.flush();

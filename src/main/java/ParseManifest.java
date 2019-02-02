@@ -1,6 +1,8 @@
 import java.io.*;
 import java.nio.charset.Charset;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class ParseManifest {
     List<CommandsObject> commandObjectList = new ArrayList<>();
@@ -25,8 +27,7 @@ public class ParseManifest {
     }
 
     public void createCommand(String file) {
-    //Парсин и добавление объекта команды в List
-
+        //Парсин и добавление объекта команды в List
         String[] command = file.split("}\n");
         System.out.println(Arrays.toString(command));
         for (String everyCommand : command) {
