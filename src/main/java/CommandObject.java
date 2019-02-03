@@ -42,4 +42,12 @@ public class CommandObject extends CommandsObject implements Serializable {
         setName(ValuesHashMap.get("name"));
         setExec(ValuesHashMap.get("exec"));
     }
+
+    public void execute(){
+        ExecutorCommand executorCommand = new ExecutorCommand();
+        String str = getExec();
+        System.out.println(str);
+        String[] command = new String[]{"/bin/sh", "-c", str};
+        executorCommand.execute(command);
+    }
 }

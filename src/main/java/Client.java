@@ -1,16 +1,20 @@
-import java.io.*;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.OutputStream;
 import java.net.*;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.Objects;
 
-public class Client extends DimplomaApp implements Serializable {
+public class Client extends DimplomaApp {
     private static final String CLIENTCONFIG = Objects.requireNonNull(Client.class.getClassLoader().getResource("client.conf")).getFile();
     private int clientPort;
     private String clientAddress;
     private int serverPort;
     private String nameClient;
     private String server;
+    private String shell;
 
     String getCLIENTCONFIG() {
         return CLIENTCONFIG;
@@ -56,6 +60,14 @@ public class Client extends DimplomaApp implements Serializable {
         this.server = server;
     }
 
+    public String getShell() {
+        return shell;
+    }
+
+    public void setShell(String shell) {
+        this.shell = shell;
+    }
+
     public static void main(String[] args) {
         Client client = new Client();
         try {
@@ -90,22 +102,35 @@ public class Client extends DimplomaApp implements Serializable {
         socket.connect(new InetSocketAddress(client.getServer(), client.getServerPort()));
         OutputStream out = socket.getOutputStream();
         ObjectOutputStream objectOutputStream = new ObjectOutputStream(out);
-        objectOutputStream.writeObject(client);
-        objectOutputStream.flush();
+        // objectOutputStream.writeObject(client);
+        //  objectOutputStream.flush();
 
 
     }
 
     private void getCommandObject(Socket socket) {
+
 //        получение объекста манифеста с сервера
         CommandsObject commandsObject = null;
         try {
             ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
-            commandsObject = (CommandsObject) in.readObject();
-            if (commandsObject instanceof FileObject) {
-                System.out.println(((FileObject) commandsObject).getName());
-                ((FileObject) commandsObject).execute();
+            while (socket.getInputStream().available() != 0) {
+                commandsObject = (CommandsObject) in.readObject();
+
+                if (commandsObject instanceof FileObject) {
+                    System.out.println(((FileObject) commandsObject).getName());
+                    ((FileObject) commandsObject).execute();
+                }
+                if (commandsObject instanceof CommandObject) {
+                    System.out.println(((CommandObject) commandsObject).getName());
+                    ((CommandObject) commandsObject).execute();
+                }
+                if (commandsObject instanceof PackageObject) {
+                    System.out.println(((PackageObject) commandsObject).getName());
+                    // ((PackageObject) commandsObject).execute();
+                }
             }
+            socket.close();
         } catch (IOException e) {
             e.printStackTrace();
         } catch (ClassNotFoundException e) {

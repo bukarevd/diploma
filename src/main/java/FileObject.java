@@ -1,6 +1,3 @@
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.Serializable;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -101,26 +98,12 @@ public class FileObject extends CommandsObject implements Serializable {
         setChmod(Integer.parseInt(ValuesHashMap.get("chown")));
     }
 
-    public void execute(){
-        StringBuilder sb = new StringBuilder();
-        String[] command = new String[]{"/bin/sh", "-c", "ld"};
-        try{
-            Process proc = new ProcessBuilder(command).start();
-            BufferedReader stdInput = new BufferedReader(new InputStreamReader(proc.getInputStream()));
-            BufferedReader stdError = new BufferedReader(new InputStreamReader(proc.getErrorStream()));
-            String s = null;
-            while ((s = stdInput.readLine()) != null){
-                sb.append(s);
-                sb.append("\n");
-            }
-
-            while ((s = stdError.readLine()) != null){
-                sb.append(s);
-                sb.append("\n");
-            }
-            System.out.println(sb.toString());;
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    public void execute() {
+//        дописать проверку на пустоту Getter, установку владельца и прав на файл
+        ExecutorCommand executorCommand = new ExecutorCommand();
+        String str = "echo " + getContent() + " >> " + getPath() + getName();
+        System.out.println(str);
+        String[] command = new String[]{"/bin/sh", "-c", str};
+        executorCommand.execute(command);
     }
 }

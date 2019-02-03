@@ -43,8 +43,8 @@ public class Server extends DimplomaApp {
     void start(List<CommandsObject> quiuiList) {
         try (ServerSocket server = new ServerSocket(serverPort)) {
             Socket socket = server.accept();
-            Client clientObject = getMessage(socket);
-            sendMessage(socket, clientObject, quiuiList);
+            //  Client clientObject = getMessage(socket);
+            sendMessage(socket, quiuiList);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -56,28 +56,26 @@ public class Server extends DimplomaApp {
         Client clientObject = null;
         try {
             ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
-            clientObject = (Client) in.readObject();
+            //clientObject = (Client) in.readObject();
         } catch (IOException e) {
-            e.printStackTrace();
-        } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
         return clientObject;
     }
 
     //    Отправка объектов на клиент для выполнения
-    void sendMessage(Socket socket, Client clientObject, List<CommandsObject> quiuiList) {
+    void sendMessage(Socket socket, List<CommandsObject> quiuiList) {
         try {
-            ObjectOutputStream outServer = new ObjectOutputStream(socket.getOutputStream());
-            FileObject fo = new FileObject();
-            fo = (FileObject) quiuiList.get(0);
-            System.out.println(fo.getName());
-            outServer.writeObject(quiuiList.get(0));
-            outServer.flush();
-//            for (CommandObject command : quiuiList) {
-//                outServer.writeObject(command);
-//                outServer.flush();
-//            }
+            while (!socket.isClosed()) {
+                ObjectOutputStream outServer = new ObjectOutputStream(socket.getOutputStream());
+                for (CommandsObject command : quiuiList) {
+                    outServer.writeObject(command);
+                    System.out.println(command);
+                    outServer.flush();
+                }
+                outServer.close();
+                socket.close();
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }

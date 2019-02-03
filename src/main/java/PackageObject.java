@@ -10,6 +10,10 @@ public class PackageObject extends CommandsObject implements Serializable {
         this.name = name;
     }
 
+    public String getName() {
+        return name;
+    }
+
     public void setVersion(String version) {
         this.version = version;
     }
