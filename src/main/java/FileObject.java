@@ -101,7 +101,7 @@ public class FileObject extends CommandsObject implements Serializable {
     public void execute() {
 //        дописать проверку на пустоту Getter, установку владельца и прав на файл
         ExecutorCommand executorCommand = new ExecutorCommand();
-        String str = "echo " + getContent() + " >> " + getPath() + getName();
+        String str = "sudo -S echo " + getContent() + " >> " + getPath() + getName();
         System.out.println(str);
         String[] command = new String[]{"/bin/sh", "-c", str};
         executorCommand.execute(command);
