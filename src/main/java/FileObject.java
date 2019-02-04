@@ -98,6 +98,7 @@ public class FileObject extends CommandsObject implements Serializable {
         setChmod(Integer.parseInt(ValuesHashMap.get("chown")));
     }
 
+    @Override
     public void execute() {
 //        дописать проверку на пустоту Getter, установку владельца и прав на файл
         ExecutorCommand executorCommand = new ExecutorCommand();

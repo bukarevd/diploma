@@ -127,7 +127,7 @@ public class Client extends DimplomaApp {
                 }
                 if (commandsObject instanceof PackageObject) {
                     System.out.println(((PackageObject) commandsObject).getName());
-                    // ((PackageObject) commandsObject).execute();
+                    ((PackageObject) commandsObject).execute();
                 }
             }
             socket.close();

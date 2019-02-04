@@ -14,6 +14,14 @@ public class PackageObject extends CommandsObject implements Serializable {
         return name;
     }
 
+    public String getVersion() {
+        return version;
+    }
+
+    public String getDependence() {
+        return dependence;
+    }
+
     public void setVersion(String version) {
         this.version = version;
     }
@@ -41,5 +49,19 @@ public class PackageObject extends CommandsObject implements Serializable {
         setName(ValuesHashMap.get("name"));
         setVersion(ValuesHashMap.get("version"));
         setDependence(ValuesHashMap.get("dependence"));
+    }
+
+    @Override
+    public void execute(){
+        ExecutorCommand executorCommand = new ExecutorCommand();
+        String str;
+        if (getVersion() != null)
+            str = "sudo -S apt-get install" + getName() + "=" + getVersion();
+        else
+            str = "sudo -S apt-get install" + getName();
+        System.out.println(str);
+        String[] command = new String[]{"/bin/sh", "-c", str};
+        executorCommand.execute(command);
+
     }
 }
