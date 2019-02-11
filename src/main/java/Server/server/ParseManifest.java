@@ -1,21 +1,26 @@
+package server;
+
+import components.CommandObject;
+import components.CommandsObject;
+import components.FileObject;
+import components.PackageObject;
+
 import java.io.*;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
-public class ParseManifest {
-    List<CommandsObject> commandObjectList = new ArrayList<>();
-    private String manifestFileName = ParserConfigFiles.class.getClassLoader().getResource("work.manifest").getFile();
-    File manifestFile = new File(manifestFileName);
+class ParseManifest {
+    private List<CommandsObject> commandObjectList = new ArrayList<>();
+    private File manifestFile = new File("/Users/bukarevd/Documents/work.manifest");
 
 
-    public List<CommandsObject> getManifestFile() {
-//        Чтение файла манифеста
+    List<CommandsObject> getManifestFile() {
+        System.out.println("Read manifest file");
         try (InputStream in = new FileInputStream(manifestFile);
              ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream()) {
             byte[] buf = new byte[1024];
-            int len = 0;
+            int len;
             while ((len = in.read(buf)) > 0) {
                 byteArrayOutputStream.write(buf, 0, len);
             }
@@ -26,10 +31,9 @@ public class ParseManifest {
         return commandObjectList;
     }
 
-    public void createCommand(String file) {
-        //Парсин и добавление объекта команды в List
+    private void createCommand(String file) {
+        System.out.println("Добавление объектов в List");
         String[] command = file.split("}\n");
-        System.out.println(Arrays.toString(command));
         for (String everyCommand : command) {
             String[] parseCommand = everyCommand.split("\\{\n");
             switch (parseCommand[0]) {
@@ -44,8 +48,24 @@ public class ParseManifest {
                     break;
             }
         }
+        for (CommandsObject object : commandObjectList) {
+            if (object.getDependency().isEmpty()) {
+                continue;
+            } else {
+                object.setObjectDependecy(getObjectDependency(object.getDependency()));
+            }
+        }
+    }
 
-        System.out.println(commandObjectList);
+
+    private CommandsObject getObjectDependency(String objectName) {
+        CommandsObject objectDependency = null;
+
+        for (CommandsObject object : commandObjectList) {
+            if (object.getName().equals(objectName)) {
+                objectDependency = object;
+            } else continue;
+        }
+        return objectDependency;
     }
 }
-

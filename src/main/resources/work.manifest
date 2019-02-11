@@ -1,21 +1,23 @@
-file{
-name=>testfile;
-path=>"/";
-content=>"hello world";
-owner=>root;
-group=>root;
-chown=>777;
-}
 package{
-name=>nginx;
-version=>latest;
+name=>mc;
+action=>install;
 dependence=>update;
 }
 command{
 name=>update;
-exec=>apt-get update;
+exec=>sudo -S apt-get update;
 }
-command{
-name=>upgrade;
-exec=>apt-get upgrade;
+file{
+name=>diplomtestfile;
+path=>~/;
+content=>"test string1
+Test string2 
+Test string 3";
+owner=>root;
+group=>root;
+chmod=>644;
 }
+
+
+
+

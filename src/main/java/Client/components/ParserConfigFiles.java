@@ -1,36 +1,36 @@
+package components;
+
+import Client.Client;
+
 import java.io.*;
 import java.nio.charset.Charset;
 import java.util.HashMap;
 
-class ParserConfigFiles {
-    private DimplomaApp app;
-    private File fileConfig;
+public class ParserConfigFiles {
+    private Client client;
 
-    ParserConfigFiles(DimplomaApp app) {
-        this.app = app;
+    public Client getClient() {
+        return client;
     }
 
-    void getConfig() {
-        if (app instanceof Server) {
-            readServerFile((Server) app);
-        }
-        if (app instanceof Client) {
-            readClientFile((Client) app);
-        }
+    public ParserConfigFiles(Client client) {
+        this.client = client;
     }
 
-    private void readServerFile(Server server) {
-        fileConfig = new File(server.getSERVERCONFIG());
-        String configServerString = reader(fileConfig);
-        setValue(server, configServerString);
-
+    public void getConfig() {
+        readClientFile(getClient());
     }
 
     private void readClientFile(Client client) {
-        fileConfig = new File(client.getCLIENTCONFIG());
-        String configClientString = reader(fileConfig);
-        setValue(client, configClientString);
 
+        File fileConfig = client.getCLIENTCONFIG();
+        String configClientString = null;
+        if (fileConfig.exists()) {
+            configClientString = reader(fileConfig);
+            setValue(client, configClientString);
+        } else {
+            System.out.println("Config file not found");
+        }
     }
 
     private String reader(File file) {
@@ -61,15 +61,4 @@ class ParserConfigFiles {
         client.setServer(configClientValues.get("server"));
         client.setServerPort(Integer.parseInt(configClientValues.get("serverport")));
     }
-
-    private void setValue(Server server, String string) {
-        HashMap<String, String> configValues = new HashMap<>();
-        String[] configArray = string.split("\n");
-        for (String str : configArray) {
-            String[] tempString = str.split("=>");
-            configValues.put(tempString[0], tempString[1]);
-        }
-        server.setServerPort(Integer.parseInt(configValues.get("port")));
-    }
-
 }
